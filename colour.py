@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 #以捕捉手指上系的蓝色便签条为例
 #摄像头480p，ubuntu 18.10
-#拍摄图片中不能出现其他蓝色物品啦。
+#macbook air BIG SUR
+#拍摄图片中不能出现其他作为标志色的物品啦。
 import random
 import time 
 import cv2
@@ -23,14 +24,14 @@ def getpicture():
     # 把 BGR 转为 HSV
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # HSV中蓝色范围
-    lower_blue = np.array([100,90,99])
-    upper_blue = np.array([124,255,255])
+    # HSV中标记色范围
+    lower_mark = np.array([100,90,99])
+    upper_mark = np.array([124,255,255])
 
-    # 获得蓝色区域的mask
-    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+    # 获得标记色区域的mask
+    mask = cv2.inRange(hsv, lower_mark, upper_mark)
     mask = cv2.blur(mask,(10,10))
-    # 和原始图片进行and操作，获得蓝色区域
+    # 和原始图片进行and操作，获得标记色区域
     res = cv2.bitwise_and(frame,frame, mask= mask)
     res = cv2.blur(res,(10,10))
     #以下这些调试用的
@@ -40,6 +41,7 @@ def getpicture():
     cv2.imshow('mask',mask)
     cv2.namedWindow('res', cv2.WINDOW_NORMAL)
     cv2.imshow('res',res)
+    
     '''k = cv2.waitKey(5) & 0xFF
     if k == 27:
         sign = 1
@@ -51,12 +53,14 @@ def getlocation(mask):
     if len(location[0])!= 0:
       x = location[0][0]
       y = location[1][0]
-      goto(-y+100,-x+100)
+      goto(-y+500,-x+500)
+     #根据屏幕大小自行调整
+
 while True:
     mask = getpicture()
     getlocation(mask)
    #停一下好像效果更好
-    time.sleep(0.01)
+    time.sleep(0.02)
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
         break
